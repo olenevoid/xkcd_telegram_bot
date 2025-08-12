@@ -10,9 +10,9 @@ Commentary: TypeAlias = str
 
 
 def fetch_xkcd_post(post_id: int) -> tuple[ImageUrl, Commentary]:
-    image_url = f'https://xkcd.com/{post_id}/info.0.json'
+    url = f'https://xkcd.com/{post_id}/info.0.json'
 
-    response = requests.get(image_url)
+    response = requests.get(url)
     response.raise_for_status()
 
     xkcd_post = response.json()

@@ -3,6 +3,7 @@ from image_helpers import IMAGE_FOLDER_NAME, save_image, get_filename_from_url
 from os import makedirs, path
 import requests
 from typing import TypeAlias
+from random import randint
 
 
 ImageUrl: TypeAlias = str
@@ -40,7 +41,9 @@ def main():
     env.read_env()
     tg_token = env('TG_TOKEN')
     makedirs(IMAGE_FOLDER_NAME, exist_ok=True)
-    url, comment = fetch_xkcd_post(666)
+    last_id = fetch_last_xkcd_post_id()
+    random_id = randint(1, last_id)
+    url, comment = fetch_xkcd_post(random_id)
     print('comment', comment)
     download_xkcd_image(url)
 

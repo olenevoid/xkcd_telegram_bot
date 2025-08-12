@@ -53,12 +53,15 @@ def download_xkcd_image(url: str):
 def main():
     env.read_env()
     tg_token = env('TG_TOKEN')
+    tg_channel_id = env('TG_CHANNEL_ID')
     makedirs(IMAGE_FOLDER_NAME, exist_ok=True)
-    last_id = fetch_last_xkcd_post_id()
-    random_id = randint(1, last_id)
+    
+    last_post_id = fetch_last_xkcd_post_id()
+    random_id = randint(1, last_post_id)
     url, comment = fetch_xkcd_post(random_id)
-    print('comment', comment)
-    download_xkcd_image(url)
+    filepath = path.join(IMAGE_FOLDER_NAME, get_filename_from_url(url))
+    save_image(url, filepath)
+    send_telegram_post(tg_token, tg_channel_id, filepath, comment)
 
 
 if __name__ == '__main__':

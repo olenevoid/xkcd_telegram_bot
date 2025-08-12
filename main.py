@@ -4,10 +4,23 @@ from os import makedirs, path
 import requests
 from typing import TypeAlias
 from random import randint
+from telegram import Bot
 
 
 ImageUrl: TypeAlias = str
 Commentary: TypeAlias = str
+
+
+def send_telegram_post(
+        tg_bot_token: str | int,
+        tg_channel_id: str | int,
+        image_path: str,
+        caption: str
+):
+    bot = Bot(tg_bot_token)
+
+    with open(image_path, 'rb') as image:
+        bot.send_photo(tg_channel_id, image, caption=caption)
 
 
 def fetch_last_xkcd_post_id():

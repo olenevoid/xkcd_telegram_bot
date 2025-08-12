@@ -1,5 +1,7 @@
 test.py
 *.env
+*.png
 
 .venv
 __pycache__
+images/

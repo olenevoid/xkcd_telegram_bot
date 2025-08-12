@@ -5,6 +5,7 @@ import requests
 from typing import TypeAlias
 from random import randint
 from telegram import Bot
+from shutil import rmtree
 
 
 ImageUrl: TypeAlias = str
@@ -55,8 +56,11 @@ def main():
     random_post_id = randint(1, last_post_id)
     url, comment = fetch_xkcd_post(random_post_id)
     filepath = path.join(IMAGE_FOLDER_NAME, get_filename_from_url(url))
+
     save_image(url, filepath)
     send_telegram_post(tg_token, tg_channel_id, filepath, comment)
+
+    rmtree(IMAGE_FOLDER_NAME)
 
 
 if __name__ == '__main__':

@@ -45,11 +45,6 @@ def fetch_xkcd_post(post_id: int) -> tuple[ImageUrl, Commentary]:
     return (xkcd_post.get('img'), xkcd_post.get('alt'))
 
 
-def download_xkcd_image(url: str):
-    filepath = path.join(IMAGE_FOLDER_NAME, get_filename_from_url(url))
-    save_image(url, filepath)
-
-
 def main():
     env.read_env()
     tg_token = env('TG_TOKEN')

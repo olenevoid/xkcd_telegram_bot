@@ -1,6 +1,5 @@
 import requests
 from urllib.parse import urlparse, unquote
-from os import path
 
 
 def save_image(url: str, filename: str, params: dict = None):
@@ -18,8 +17,5 @@ def get_filename_from_url(url):
 
     name = parsed_url.path.split('/')[-1]
     name = unquote(name)
-
-    if not len(path.splitext(name)[1]):
-        name = f'{name}.png'
 
     return name

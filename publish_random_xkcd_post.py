@@ -1,9 +1,11 @@
 from environs import env
 from image_helpers import save_image, get_filename_from_url
-from os import remove
+from os import remove, path
 import requests
+from requests.exceptions import HTTPError, Timeout, ConnectionError
 from random import randint
 from telegram import Bot
+from telegram.error import TelegramError
 
 
 def send_telegram_post(
@@ -45,16 +47,32 @@ def main():
     tg_token = env('TG_TOKEN')
     tg_channel_id = env('TG_CHANNEL_ID')
 
-    last_post_id = fetch_last_xkcd_post_id()
-    random_post_id = randint(1, last_post_id)
-    url, comment = fetch_xkcd_post(random_post_id)
-        
-    filename = get_filename_from_url(url)
-    save_image(url, filename)
-    send_telegram_post(tg_token, tg_channel_id, filename, comment)
+    try:
+        last_post_id = fetch_last_xkcd_post_id()
+        random_post_id = randint(1, last_post_id)
+        url, comment = fetch_xkcd_post(random_post_id)
+    
+    except (HTTPError, Timeout, ConnectionError):
+        print("Произошла ошибка при поиске последнего поста")
+        return
 
-    remove(filename)
+    try:    
+        filename = get_filename_from_url(url)
+        save_image(url, filename)
+        send_telegram_post(tg_token, tg_channel_id, filename, comment)
 
+    except (HTTPError, Timeout, ConnectionError):
+        print("Произошла ошибка при скачивании изображения")
+
+    except TelegramError:
+        print("Произошла ошибка при отправке в Telegram")
+
+    except Exception:
+        print("Произошла неизвестная ошибка")
+
+    finally:
+        if filename and path.exists(filename):
+            remove(filename)
 
 
 if __name__ == '__main__':

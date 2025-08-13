@@ -4,7 +4,6 @@ from os import path
 
 
 IMAGE_FOLDER_NAME = 'images'
-DEFAULT_EXTENSION = 'png'
 
 
 def save_image(url: str, filename: str, params: dict = None):
@@ -24,6 +23,6 @@ def get_filename_from_url(url):
     name = unquote(name)
 
     if not len(path.splitext(name)[1]):
-        name = f'{name}.{DEFAULT_EXTENSION}'
+        name = f'{name}.png'
 
     return name

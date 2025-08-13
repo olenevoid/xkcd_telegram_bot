@@ -3,9 +3,6 @@ from urllib.parse import urlparse, unquote
 from os import path
 
 
-IMAGE_FOLDER_NAME = 'images'
-
-
 def save_image(url: str, filename: str, params: dict = None):
 
     response = requests.get(url, params=params)

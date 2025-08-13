@@ -1,10 +1,9 @@
 from environs import env
-from image_helpers import IMAGE_FOLDER_NAME, save_image, get_filename_from_url
-from os import makedirs, path
+from image_helpers import save_image, get_filename_from_url
+from os import remove
 import requests
 from random import randint
 from telegram import Bot
-from shutil import rmtree
 
 
 def send_telegram_post(
@@ -45,17 +44,17 @@ def main():
     env.read_env()
     tg_token = env('TG_TOKEN')
     tg_channel_id = env('TG_CHANNEL_ID')
-    makedirs(IMAGE_FOLDER_NAME, exist_ok=True)
 
     last_post_id = fetch_last_xkcd_post_id()
     random_post_id = randint(1, last_post_id)
     url, comment = fetch_xkcd_post(random_post_id)
-    filepath = path.join(IMAGE_FOLDER_NAME, get_filename_from_url(url))
+        
+    filename = get_filename_from_url(url)
+    save_image(url, filename)
+    send_telegram_post(tg_token, tg_channel_id, filename, comment)
 
-    save_image(url, filepath)
-    send_telegram_post(tg_token, tg_channel_id, filepath, comment)
+    remove(filename)
 
-    rmtree(IMAGE_FOLDER_NAME)
 
 
 if __name__ == '__main__':
